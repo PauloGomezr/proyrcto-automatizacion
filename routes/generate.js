@@ -2,13 +2,12 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
-const Code = require('../models/Code');
-const shortid = require('shortid');
 
+// Ruta POST para generar el código
 router.post('/', async (req, res) => {
     const { numero, descripcion } = req.body;
-    const fileName = `codigo-${shortid.generate()}.html`;
-    const filePath = path.join(__dirname, `../public/generated/${fileName}`);
+    const fileName = `codigo-${numero}.html`;
+    const filePath = path.join(__dirname, '../public/generated', fileName);
 
     const htmlContent = `
     <!DOCTYPE html>
@@ -58,27 +57,13 @@ router.post('/', async (req, res) => {
     </html>
     `;
 
-    try {
-        await Code.create({ numero, descripcion, filePath });
-
-        fs.writeFile(filePath, htmlContent, (err) => {
-            if (err) {
-                return res.status(500).json({ message: 'Error al generar el archivo' });
-            }
-
-            const fullUrl = `${req.protocol}://${req.get('host')}/generated/${fileName}`;
-            const shortUrl = `https://wa.me/${numero}?text=${encodeURIComponent(descripcion)}`;
-
-            res.status(200).json({
-                message: 'Archivo generado con éxito',
-                url: `/generated/${fileName}`,
-                fullUrl: fullUrl,
-                shortUrl: shortUrl
-            });
-        });
-    } catch (err) {
-        res.status(500).json({ message: 'Error al guardar en la base de datos' });
-    }
+    fs.writeFile(filePath, htmlContent, (err) => {
+        if (err) {
+            console.error('Error al generar el archivo:', err);
+            return res.status(500).json({ message: 'Error al generar el archivo' });
+        }
+        res.status(200).json({ message: 'Archivo generado con éxito', url: `/generated/${fileName}` });
+    });
 });
 
 module.exports = router;

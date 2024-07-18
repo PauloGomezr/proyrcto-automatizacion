@@ -17,7 +17,7 @@
             function enviarUbicacion(position) {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
-                const mensaje = `Hola, mi ubicación es: https://www.google.com/maps?q=${lat},${lon} - Hola encontre tu perro dexter estoy ubicado en:`;
+                const mensaje = `Hola, esta es mi ubicación: https://www.google.com/maps?q=${lat},${lon} - Encontre a Dexter`;
                 const numero = "3212540069";
                 window.location.href = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
             }
