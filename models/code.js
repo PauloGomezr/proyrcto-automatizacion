@@ -1,14 +1,14 @@
-// models/code.js
 const mongoose = require('mongoose');
 
 const codeSchema = new mongoose.Schema({
-  phoneNumber: String,
-  description: String,
-  codeUrl: String,
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+    numero: {
+        type: String,
+        required: true
+    },
+    descripcion: {
+        type: String,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Code', codeSchema);

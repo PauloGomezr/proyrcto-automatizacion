@@ -1,19 +1,29 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const mongoose = require('mongoose');
+const { MongoClient } = require('mongodb');
 const generateRouter = require('./routes/generate');
 
-// Conexión a MongoDB
-const uri = "mongodb+srv://<Admin_17>:<tHkjHpD138g0Jy1D>@gencodwhats.4b2amnj.mongodb.net/?retryWrites=true&w=majority&appName=gencodwhats";
+const username = encodeURIComponent("Admin_17");
+const password = encodeURIComponent("tHkjHpD138g0Jy1D");
+const cluster = "gencodwhats.4b2amnj.mongodb.net";
+const authSource = "gencodwhats";
+const authMechanism = "SCRAM-SHA-1";
 
-mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-    .then(() => console.log('Connected to MongoDB Atlas'))
-    .catch(err => console.error('Error connecting to MongoDB:', err));
+let uri = `mongodb+srv://${username}:${password}@${cluster}/?authSource=${authSource}&authMechanism=${authMechanism}`;
 
+const client = new MongoClient(uri);
+
+async function connectToDB() {
+    try {
+        await client.connect();
+        console.log('Conectado a MongoDB Atlas');
+    } catch (err) {
+        console.error('Error conectándose a MongoDB:', err);
+    }
+}
+
+connectToDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -22,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Ruta para generar código
-app.use('/generate', generateRouter);
+app.use('/generate', generateRouter(client));
 
 // Puerto del servidor
 const PORT = process.env.PORT || 3000;
