@@ -25,6 +25,9 @@ async function connectToDB() {
 
 connectToDB();
 
+// Guardamos el cliente de MongoDB en app.locals para que esté disponible en los routers
+app.locals.mongoClient = client;
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -32,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Ruta para generar código
-app.use('/generate', generateRouter(client));
+app.use('/generate', generateRouter);
 
 // Puerto del servidor
 const PORT = process.env.PORT || 3000;
