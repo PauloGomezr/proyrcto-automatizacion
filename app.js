@@ -5,18 +5,17 @@ const mongoose = require('mongoose');
 const generateRouter = require('./routes/generate');
 
 // Conexión a MongoDB
-const mongoURI = 'mongodb+srv://<Admin_17>:<tHkjHpD138g0Jy1D>@gencodwhats.4b2amnj.mongodb.net/?retryWrites=true&w=majority&appName=gencodwhats';
+const uri = "mongodb+srv://<Admin_17>:<tHkjHpD138g0Jy1D>@gencodwhats.4b2amnj.mongodb.net/?retryWrites=true&w=majority&appName=gencodwhats";
 
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Connected to MongoDB');
-}).catch((error) => {
-  console.error('Error connecting to MongoDB:', error);
-});
+mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+    .then(() => console.log('Connected to MongoDB Atlas'))
+    .catch(err => console.error('Error connecting to MongoDB:', err));
 
-app.use(express.json());
+
+app.use(express.json());npm install mongodbnpm install mongodb
 app.use(express.urlencoded({ extended: true }));
 
 // Ruta para servir archivos estáticos (HTML, CSS, JS)
