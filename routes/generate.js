@@ -2,15 +2,12 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
-const { ObjectId } = require('mongodb');
 
-// Definimos la ruta POST para generar el código
+// Ruta POST para generar el código
 router.post('/', async (req, res) => {
-    const client = req.app.locals.mongoClient; // Obtenemos el cliente de MongoDB del app.locals
-
     const { numero, descripcion } = req.body;
     const fileName = `codigo-${numero}.html`;
-    const filePath = path.join(__dirname, `../public/generated/${fileName}`);
+    const filePath = path.join(__dirname, '../public/generated', fileName);
 
     const htmlContent = `
     <!DOCTYPE html>
@@ -62,6 +59,7 @@ router.post('/', async (req, res) => {
 
     fs.writeFile(filePath, htmlContent, (err) => {
         if (err) {
+            console.error('Error al generar el archivo:', err);
             return res.status(500).json({ message: 'Error al generar el archivo' });
         }
         res.status(200).json({ message: 'Archivo generado con éxito', url: `/generated/${fileName}` });
