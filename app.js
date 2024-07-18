@@ -5,7 +5,9 @@ const mongoose = require('mongoose');
 const generateRouter = require('./routes/generate');
 
 // Conexión a MongoDB
-mongoose.connect('your_mongodb_connection_string', {
+const mongoURI = 'mongodb+srv://<Admin_17>:<tHkjHpD138g0Jy1D>@gencodwhats.4b2amnj.mongodb.net/?retryWrites=true&w=majority&appName=gencodwhats';
+
+mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
