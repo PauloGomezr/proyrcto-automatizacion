@@ -1,16 +1,4 @@
-const express = require('express');
-const router = express.Router();
-const fs = require('fs');
-const path = require('path');
-const Code = require('../models/Code');
-const shortid = require('shortid');
 
-router.post('/', async (req, res) => {
-    const { numero, descripcion } = req.body;
-    const fileName = `codigo-${shortid.generate()}.html`;
-    const filePath = path.join(__dirname, `../public/generated/${fileName}`);
-
-    const htmlContent = `
     <!DOCTYPE html>
     <html lang="es">
     <head>
@@ -29,9 +17,9 @@ router.post('/', async (req, res) => {
             function enviarUbicacion(position) {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
-                const mensaje = \`Hola, esta es mi ubicación: https://www.google.com/maps?q=\${lat},\${lon} - ${descripcion}\`;
-                const numero = "${numero}";
-                window.location.href = \`https://wa.me/\${numero}?text=\${encodeURIComponent(mensaje)}\`;
+                const mensaje = `Hola, esta es mi ubicación: https://www.google.com/maps?q=${lat},${lon} - Encontre a Kira`;
+                const numero = "3166456514";
+                window.location.href = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
             }
 
             function mostrarError(error) {
@@ -56,29 +44,4 @@ router.post('/', async (req, res) => {
         <h1>Enviando ubicación a WhatsApp...</h1>
     </body>
     </html>
-    `;
-
-    try {
-        await Code.create({ numero, descripcion, filePath });
-
-        fs.writeFile(filePath, htmlContent, (err) => {
-            if (err) {
-                return res.status(500).json({ message: 'Error al generar el archivo' });
-            }
-
-            const fullUrl = `${req.protocol}://${req.get('host')}/generated/${fileName}`;
-            const shortUrl = `https://wa.me/${numero}?text=${encodeURIComponent(descripcion)}`;
-
-            res.status(200).json({
-                message: 'Archivo generado con éxito',
-                url: `/generated/${fileName}`,
-                fullUrl: fullUrl,
-                shortUrl: shortUrl
-            });
-        });
-    } catch (err) {
-        res.status(500).json({ message: 'Error al guardar en la base de datos' });
-    }
-});
-
-module.exports = router;
+    

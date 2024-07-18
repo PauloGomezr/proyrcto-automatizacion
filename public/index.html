@@ -16,6 +16,7 @@
         <input type="text" id="descripcion" name="descripcion" required>
 
         <button type="submit">Generar Código</button>
+        <button type="button" id="refreshButton">Refrescar Campos</button>
     </form>
     <div id="result"></div>
 
@@ -35,7 +36,11 @@
             .then(response => response.json())
             .then(data => {
                 if (data.message === 'Archivo generado con éxito') {
-                    document.getElementById('result').innerHTML = `<p>Archivo generado: <a href="${data.url}" target="_blank">${data.url}</a></p>`;
+                    document.getElementById('result').innerHTML = `
+                        <p>Archivo generado: <a href="${data.url}" target="_blank">${data.url}</a></p>
+                        <p>URL completa: ${data.fullUrl}</p>
+                        <p>URL acortada: ${data.shortUrl}</p>
+                    `;
                 } else {
                     document.getElementById('result').innerHTML = `<p>Error: ${data.message}</p>`;
                 }
@@ -43,6 +48,11 @@
             .catch(error => {
                 document.getElementById('result').innerHTML = `<p>Error: ${error}</p>`;
             });
+        });
+
+        document.getElementById('refreshButton').addEventListener('click', function() {
+            document.getElementById('generateForm').reset();
+            document.getElementById('result').innerHTML = '';
         });
     </script>
 </body>
