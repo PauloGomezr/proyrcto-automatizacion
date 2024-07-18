@@ -15,7 +15,7 @@ mongoose.connect(uri, {
     .catch(err => console.error('Error connecting to MongoDB:', err));
 
 
-app.use(express.json());npm install mongodbnpm install mongodb
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Ruta para servir archivos estáticos (HTML, CSS, JS)
