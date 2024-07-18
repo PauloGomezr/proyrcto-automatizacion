@@ -1,7 +1,18 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const mongoose = require('mongoose');
 const generateRouter = require('./routes/generate');
+
+// Conexión a MongoDB
+mongoose.connect('your_mongodb_connection_string', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((error) => {
+  console.error('Error connecting to MongoDB:', error);
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const Code = require('/models/Code');
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { numero, descripcion } = req.body;
     const fileName = `codigo-${numero}.html`;
     const filePath = path.join(__dirname, `../public/generated/${fileName}`);
@@ -56,11 +57,24 @@ router.post('/', (req, res) => {
     </html>
     `;
 
-    fs.writeFile(filePath, htmlContent, (err) => {
+    fs.writeFile(filePath, async (err) => {
         if (err) {
             return res.status(500).json({ message: 'Error al generar el archivo' });
         }
-        res.status(200).json({ message: 'Archivo generado con éxito', url: `/generated/${fileName}` });
+
+        try {
+            const newCode = new Code({
+                phoneNumber: numero,
+                description: descripcion,
+                codeUrl: `/generated/${fileName}`,
+            });
+
+            await newCode.save();
+
+            res.status(200).json({ message: 'Archivo generado con éxito', url: `/generated/${fileName}` });
+        } catch (error) {
+            res.status(500).json({ message: 'Error al guardar en la base de datos' });
+        }
     });
 });
 
