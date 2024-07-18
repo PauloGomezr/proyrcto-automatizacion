@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Códigos WhatsApp</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Generador de Códigos WhatsApp</h1>
+    <form id="generateForm">
+        <label for="numero">Número de WhatsApp:</label>
+        <input type="text" id="numero" name="numero" required>
+        
+        <label for="descripcion">Descripción:</label>
+        <input type="text" id="descripcion" name="descripcion" required>
+
+        <button type="submit">Generar Código</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('generateForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const numero = document.getElementById('numero').value;
+            const descripcion = document.getElementById('descripcion').value;
+
+            fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ numero, descripcion })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Archivo generado con éxito') {
+                    document.getElementById('result').innerHTML = `<p>Archivo generado: <a href="${data.url}" target="_blank">${data.url}</a></p>`;
+                } else {
+                    document.getElementById('result').innerHTML = `<p>Error: ${data.message}</p>`;
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').innerHTML = `<p>Error: ${error}</p>`;
+            });
+        });
+    </script>
+</body>
+</html>
