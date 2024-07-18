@@ -1,3 +1,4 @@
+// models/code.js
 const mongoose = require('mongoose');
 
 const codeSchema = new mongoose.Schema({

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
-const Code = require('/models/Code');
+const Code = require('../models/code'); // Asegúrate de que esta ruta sea correcta
 
 router.post('/', async (req, res) => {
     const { numero, descripcion } = req.body;
@@ -71,7 +71,12 @@ router.post('/', async (req, res) => {
 
             await newCode.save();
 
-            res.status(200).json({ message: 'Archivo generado con éxito', url: `/generated/${fileName}` });
+            // Leer el documento guardado para verificar
+            const savedCode = await Code.findOne({ phoneNumber: numero });
+
+            console.log('Saved Code:', savedCode);
+
+            res.status(200).json({ message: 'Archivo generado con éxito', url: `/generated/${fileName}`, savedCode });
         } catch (error) {
             res.status(500).json({ message: 'Error al guardar en la base de datos' });
         }
